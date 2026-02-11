@@ -3,20 +3,50 @@
 import { useState, useEffect } from "react";
 
 const TG_BOT_LINK = "https://t.me/homiezdotfun_bot";
+const API_BASE = "https://tugboat-production.up.railway.app/api";
 
 /* ═══════════════════════════════════════════════════════
-   Data constants
+   Types
    ═══════════════════════════════════════════════════════ */
+interface StatsData {
+  totalBets: number;
+  totalVolumeUsd: number;
+  totalUsers: number;
+}
 
-const WALL_OF_SHAME = [
-  { rank: 1, avatar: "😎", name: "degen_mike", streak: "🔥 12W", totalLs: 8, badge: "Biggest Degen" },
-  { rank: 2, avatar: "💅", name: "cryptoSis99", streak: "🔥 9W", totalLs: 12, badge: null },
-  { rank: 3, avatar: "🧠", name: "alphaLeaker", streak: "💀 4L", totalLs: 15, badge: null },
-  { rank: 4, avatar: "🍗", name: "wingKing", streak: "🔥 3W", totalLs: 20, badge: "Pro Bag Holder" },
-  { rank: 5, avatar: "🛡️", name: "rug_survivor", streak: "💀 6L", totalLs: 22, badge: null },
-  { rank: 6, avatar: "😢", name: "sadBoi42", streak: "💀 8L", totalLs: 25, badge: null },
-  { rank: 7, avatar: "💀", name: "bag_fumbler", streak: "💀 14L", totalLs: 40, badge: "Professional Bag Holder" },
-];
+interface LeaderboardEntry {
+  username: string;
+  totalBets: number;
+  wins: number;
+  losses: number;
+  winRate: number;
+  totalStakedUsd: number;
+  wonUsd: number;
+  lostUsd: number;
+}
+
+/* ═══════════════════════════════════════════════════════
+   Helpers
+   ═══════════════════════════════════════════════════════ */
+function formatUsd(n: number): string {
+  if (n >= 1000) return `$${(n / 1000).toFixed(1)}K`;
+  return `$${n.toFixed(2)}`;
+}
+
+function formatCount(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}K+`;
+  return `${n}`;
+}
+
+const AVATAR_POOL = ["😎", "💅", "🧠", "🍗", "🛡️", "😢", "💀", "🤡", "🔥", "👑"];
+
+function getBadge(entry: LeaderboardEntry, rank: number): string | null {
+  if (rank === 1) return "Top Degen";
+  if (entry.winRate === 100 && entry.totalBets > 0) return "Undefeated";
+  if (entry.winRate === 0 && entry.losses > 0) return "Professional Bag Holder";
+  if (entry.losses >= 5) return "Biggest L Collector";
+  return null;
+}
 
 const FLOATING_STICKERS = [
   { content: "🐕", top: "10%", left: "3%", delay: "0s", size: "2.2rem" },
@@ -107,7 +137,19 @@ function Navbar() {
 /* ═══════════════════════════════════════════════════════
    Hero Section
    ═══════════════════════════════════════════════════════ */
-function HeroSection() {
+function HeroSection({ stats }: { stats: StatsData | null }) {
+  const statItems = stats
+    ? [
+        { value: formatCount(stats.totalBets), label: "Bets Placed" },
+        { value: formatUsd(stats.totalVolumeUsd), label: "Volume" },
+        { value: formatCount(stats.totalUsers), label: "Degens" },
+      ]
+    : [
+        { value: "—", label: "Bets Placed" },
+        { value: "—", label: "Volume" },
+        { value: "—", label: "Degens" },
+      ];
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
@@ -150,11 +192,7 @@ function HeroSection() {
 
         {/* Stats */}
         <div className="mt-16 flex items-center justify-center gap-6 sm:gap-14 animate-slide-up stagger-4">
-          {[
-            { value: "2.4K+", label: "Bets Placed" },
-            { value: "$180K", label: "Volume" },
-            { value: "890+", label: "Degens" },
-          ].map((stat) => (
+          {statItems.map((stat) => (
             <div
               key={stat.label}
               className="brutal-card px-5 py-3 text-center"
@@ -242,7 +280,24 @@ function HowItWorks() {
 /* ═══════════════════════════════════════════════════════
    Wall of Shame (Leaderboard)
    ═══════════════════════════════════════════════════════ */
-function WallOfShame() {
+function WallOfShame({ entries }: { entries: LeaderboardEntry[] }) {
+  if (entries.length === 0) {
+    return (
+      <section id="shame" className="relative py-28 z-10">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl sm:text-5xl font-black italic uppercase">
+              Wall of <span className="text-[#f43f5e]">Shame</span>
+            </h2>
+            <p className="text-text-muted mt-3 text-sm uppercase tracking-wider font-bold">
+              no degens yet — be the first
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="shame" className="relative py-28 z-10">
       <div className="max-w-3xl mx-auto px-6">
@@ -261,32 +316,37 @@ function WallOfShame() {
             <span>#</span>
             <span></span>
             <span>The Homie</span>
-            <span>Current Streak</span>
+            <span>W / L</span>
             <span className="text-right">Total Ls</span>
           </div>
 
-          {WALL_OF_SHAME.map((row) => (
-            <div key={row.rank} className="shame-row text-sm">
-              <span className="font-black text-[#fbbf24]">
-                {row.rank}
-              </span>
-              <span className="text-xl">{row.avatar}</span>
-              <div>
-                <span className="font-bold text-text-primary">{row.name}</span>
-                {row.badge && (
-                  <span className="ml-2 text-[0.6rem] font-bold uppercase px-2 py-0.5 bg-[#f43f5e] text-white border-2 border-black inline-block">
-                    {row.badge}
-                  </span>
-                )}
+          {entries.map((entry, i) => {
+            const rank = i + 1;
+            const avatar = AVATAR_POOL[i % AVATAR_POOL.length];
+            const badge = getBadge(entry, rank);
+            return (
+              <div key={entry.username} className="shame-row text-sm">
+                <span className="font-black text-[#fbbf24]">
+                  {rank}
+                </span>
+                <span className="text-xl">{avatar}</span>
+                <div>
+                  <span className="font-bold text-text-primary">{entry.username}</span>
+                  {badge && (
+                    <span className="ml-2 text-[0.6rem] font-bold uppercase px-2 py-0.5 bg-[#f43f5e] text-white border-2 border-black inline-block">
+                      {badge}
+                    </span>
+                  )}
+                </div>
+                <span className="font-bold">
+                  {entry.wins}W / {entry.losses}L
+                </span>
+                <span className="text-right font-black text-[#f43f5e]">
+                  {entry.losses}
+                </span>
               </div>
-              <span className="font-bold">
-                {row.streak}
-              </span>
-              <span className="text-right font-black text-[#f43f5e]">
-                {row.totalLs}
-              </span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -500,14 +560,29 @@ function TelegramIcon() {
    Home (main)
    ═══════════════════════════════════════════════════════ */
 export default function Home() {
+  const [stats, setStats] = useState<StatsData | null>(null);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+
+  useEffect(() => {
+    fetch(`${API_BASE}/stats`)
+      .then((r) => r.json())
+      .then((d) => setStats(d))
+      .catch(() => {});
+
+    fetch(`${API_BASE}/leaderboard`)
+      .then((r) => r.json())
+      .then((d) => setLeaderboard(d.leaderboard ?? []))
+      .catch(() => {});
+  }, []);
+
   return (
     <main className="relative scanlines">
       <div className="vaporwave-grid" />
       <FloatingStickers />
       <Navbar />
-      <HeroSection />
+      <HeroSection stats={stats} />
       <HowItWorks />
-      <WallOfShame />
+      <WallOfShame entries={leaderboard} />
       <FAQSection />
       <CTASection />
       <Footer />
