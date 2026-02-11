@@ -8,17 +8,6 @@ const TG_BOT_LINK = "https://t.me/homiezdotfun_bot";
    Data constants
    ═══════════════════════════════════════════════════════ */
 
-const LIVE_BETS = [
-  { user: "degen_mike", bet: "Lakers ML tonight", amount: "$50", emoji: "🏀" },
-  { user: "cryptoSis99", bet: "ETH above 4k by Friday", amount: "$200", emoji: "📈" },
-  { user: "wingKing", bet: "I eat 50 nuggs in 1hr", amount: "$30", emoji: "🍗" },
-  { user: "rug_survivor", bet: "BTC flips gold this cycle", amount: "$500", emoji: "🪙" },
-  { user: "sadBoi42", bet: "Celtics sweep playoffs", amount: "$75", emoji: "🍀" },
-  { user: "alphaLeaker", bet: "SOL hits $300 next month", amount: "$150", emoji: "🚀" },
-  { user: "npcTrader", bet: "My portfolio stays green", amount: "$100", emoji: "🤡" },
-  { user: "bag_fumbler", bet: "I quit fast food for a week", amount: "$20", emoji: "🍔" },
-];
-
 const LEADERBOARD = [
   { rank: 1, name: "degen_mike", wl: "42-8", pnl: "+$4,200", emoji: "👑" },
   { rank: 2, name: "cryptoSis99", wl: "38-12", pnl: "+$3,100", emoji: "🔥" },
@@ -74,40 +63,6 @@ function FloatingStickers() {
         </span>
       ))}
     </>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════
-   Live Bets Ticker
-   ═══════════════════════════════════════════════════════ */
-function LiveBetsTicker() {
-  const doubled = [...LIVE_BETS, ...LIVE_BETS];
-  return (
-    <div className="ticker-strip py-3 relative z-10">
-      <div className="flex items-center">
-        {/* LIVE badge */}
-        <span
-          className="shrink-0 mx-4 px-3 py-1 bg-[#39ff14] text-[#0a0014] text-[0.6rem] font-bold rounded animate-arcade-pulse"
-          style={{ fontFamily: PIXEL_FONT }}
-        >
-          LIVE
-        </span>
-        <div className="ticker-strip-inner">
-          {doubled.map((bet, i) => (
-            <span
-              key={i}
-              className="inline-flex items-center gap-2 mx-6 text-sm text-text-secondary"
-            >
-              <span>{bet.emoji}</span>
-              <span className="text-[#00fff0] font-medium">{bet.user}</span>
-              <span className="text-text-muted">—</span>
-              <span>{bet.bet}</span>
-              <span className="text-[#39ff14] font-bold">{bet.amount}</span>
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -685,7 +640,7 @@ export default function Home() {
       <FloatingStickers />
       <Navbar />
       <HeroSection />
-      <LiveBetsTicker />
+
       <HowItWorks />
       <FeaturesSection />
       <LeaderboardSection />
