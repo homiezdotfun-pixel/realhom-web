@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0014",
+  themeColor: "#0f172a",
 };
 
 export default function RootLayout({
@@ -38,7 +38,7 @@ export default function RootLayout({
       </head>
       <body
         className="antialiased"
-        style={{ fontFamily: "'Inter', 'Space Grotesk', sans-serif" }}
+        style={{ fontFamily: "'Space Grotesk', monospace, sans-serif" }}
       >
         {children}
       </body>
