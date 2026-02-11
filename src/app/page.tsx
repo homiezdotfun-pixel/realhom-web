@@ -475,11 +475,11 @@ function DogeLogo({ size = 40 }: { size?: number }) {
       {/* Mouth */}
       <path d="M32 45 L28 50" stroke="#333" strokeWidth="2" strokeLinecap="round" />
       <path d="M32 45 L36 50" stroke="#333" strokeWidth="2" strokeLinecap="round" />
-      {/* Tongue */}
-      <ellipse cx="36" cy="52" rx="3" ry="4" fill="#F43F5E" stroke="#000" strokeWidth="1.5" />
-      {/* Eyebrows (skeptical doge look) */}
-      <path d="M17 26 L27 24" stroke="#000" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M47 26 L37 24" stroke="#000" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Tongue (centered below mouth) */}
+      <ellipse cx="32" cy="53" rx="3" ry="4" fill="#F43F5E" stroke="#000" strokeWidth="1.5" />
+      {/* Eyebrows (confident / cocky) */}
+      <path d="M17 27 L27 28" stroke="#000" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M47 27 L37 28" stroke="#000" strokeWidth="2.5" strokeLinecap="round" />
       {/* Cheek blush */}
       <circle cx="16" cy="38" r="3" fill="#F43F5E" opacity="0.3" />
       <circle cx="48" cy="38" r="3" fill="#F43F5E" opacity="0.3" />
