@@ -75,7 +75,7 @@ function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="text-3xl">🐕</span>
+          <DogeLogo size={36} />
           <span className="text-xl font-black tracking-tight">
             homiez<span className="text-[#4ade80]">.fun</span>
           </span>
@@ -112,8 +112,8 @@ function HeroSection() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
         {/* Doge mascot */}
-        <div className="text-8xl sm:text-9xl mb-6 animate-float">
-          🐕
+        <div className="mb-6 animate-float flex justify-center">
+          <DogeLogo size={120} />
         </div>
 
         {/* Title */}
@@ -406,7 +406,7 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <span className="text-2xl">🐕</span>
+            <DogeLogo size={28} />
             <span className="font-black text-lg">
               homiez<span className="text-[#4ade80]">.fun</span>
             </span>
@@ -436,6 +436,54 @@ function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   Doge Logo (pixel-art Shiba)
+   ═══════════════════════════════════════════════════════ */
+function DogeLogo({ size = 40 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ display: "block" }}
+    >
+      {/* Ears */}
+      <path d="M12 8 L20 8 L20 20 L12 20 Z" fill="#D4A054" stroke="#000" strokeWidth="3" />
+      <path d="M44 8 L52 8 L52 20 L44 20 Z" fill="#D4A054" stroke="#000" strokeWidth="3" />
+      {/* Inner ears */}
+      <path d="M14 10 L18 10 L18 16 L14 16 Z" fill="#C084FC" />
+      <path d="M46 10 L50 10 L50 16 L46 16 Z" fill="#C084FC" />
+      {/* Head */}
+      <rect x="8" y="16" width="48" height="40" rx="4" fill="#E8B86D" stroke="#000" strokeWidth="3" />
+      {/* Face mask (lighter) */}
+      <path d="M20 30 L44 30 L44 52 L36 56 L28 56 L20 52 Z" fill="#F5DEB3" />
+      {/* Eyes */}
+      <circle cx="22" cy="32" r="4" fill="#000" />
+      <circle cx="42" cy="32" r="4" fill="#000" />
+      {/* Eye shine */}
+      <circle cx="24" cy="30" r="1.5" fill="#fff" />
+      <circle cx="44" cy="30" r="1.5" fill="#fff" />
+      {/* Nose */}
+      <ellipse cx="32" cy="42" rx="4" ry="3" fill="#333" />
+      {/* Nose shine */}
+      <ellipse cx="33.5" cy="41" rx="1" ry="0.7" fill="#666" />
+      {/* Mouth */}
+      <path d="M32 45 L28 50" stroke="#333" strokeWidth="2" strokeLinecap="round" />
+      <path d="M32 45 L36 50" stroke="#333" strokeWidth="2" strokeLinecap="round" />
+      {/* Tongue */}
+      <ellipse cx="36" cy="52" rx="3" ry="4" fill="#F43F5E" stroke="#000" strokeWidth="1.5" />
+      {/* Eyebrows (skeptical doge look) */}
+      <path d="M17 26 L27 24" stroke="#000" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M47 26 L37 24" stroke="#000" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Cheek blush */}
+      <circle cx="16" cy="38" r="3" fill="#F43F5E" opacity="0.3" />
+      <circle cx="48" cy="38" r="3" fill="#F43F5E" opacity="0.3" />
+    </svg>
   );
 }
 
