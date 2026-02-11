@@ -16,6 +16,7 @@ interface StatsData {
 
 interface LeaderboardEntry {
   username: string;
+  walletAddress: string;
   totalBets: number;
   wins: number;
   losses: number;
@@ -38,13 +39,17 @@ function formatCount(n: number): string {
   return `${n}`;
 }
 
-const AVATAR_POOL = ["😎", "💅", "🧠", "🍗", "🛡️", "😢", "💀", "🤡", "🔥", "👑"];
+const AVATAR_POOL = ["😎", "💅", "🧠", "🍗", "🛡️", "🔥", "👑", "🤡", "💎", "🚀"];
+
+function truncateWallet(addr: string): string {
+  if (addr.length <= 10) return addr;
+  return `${addr.slice(0, 4)}...${addr.slice(-4)}`;
+}
 
 function getBadge(entry: LeaderboardEntry, rank: number): string | null {
   if (rank === 1) return "Top Degen";
   if (entry.winRate === 100 && entry.totalBets > 0) return "Undefeated";
-  if (entry.winRate === 0 && entry.losses > 0) return "Professional Bag Holder";
-  if (entry.losses >= 5) return "Biggest L Collector";
+  if (entry.wins >= 5) return "W Machine";
   return null;
 }
 
@@ -114,8 +119,8 @@ function Navbar() {
           <a href="#how" className="hover:text-[#4ade80] transition-colors">
             How It Works
           </a>
-          <a href="#shame" className="hover:text-[#4ade80] transition-colors">
-            Wall of Shame
+          <a href="#fame" className="hover:text-[#4ade80] transition-colors">
+            Wall of Fame
           </a>
           <a href="#faq" className="hover:text-[#4ade80] transition-colors">
             FAQ
@@ -278,16 +283,16 @@ function HowItWorks() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   Wall of Shame (Leaderboard)
+   Wall of Fame (Leaderboard)
    ═══════════════════════════════════════════════════════ */
-function WallOfShame({ entries }: { entries: LeaderboardEntry[] }) {
+function WallOfFame({ entries }: { entries: LeaderboardEntry[] }) {
   if (entries.length === 0) {
     return (
-      <section id="shame" className="relative py-28 z-10">
+      <section id="fame" className="relative py-28 z-10">
         <div className="max-w-3xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-4xl sm:text-5xl font-black italic uppercase">
-              Wall of <span className="text-[#f43f5e]">Shame</span>
+              Wall of <span className="text-[#4ade80]">Fame</span>
             </h2>
             <p className="text-text-muted mt-3 text-sm uppercase tracking-wider font-bold">
               no degens yet — be the first
@@ -299,11 +304,11 @@ function WallOfShame({ entries }: { entries: LeaderboardEntry[] }) {
   }
 
   return (
-    <section id="shame" className="relative py-28 z-10">
+    <section id="fame" className="relative py-28 z-10">
       <div className="max-w-3xl mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="text-4xl sm:text-5xl font-black italic uppercase">
-            Wall of <span className="text-[#f43f5e]">Shame</span>
+            Wall of <span className="text-[#4ade80]">Fame</span>
           </h2>
           <p className="text-text-muted mt-3 text-sm uppercase tracking-wider font-bold">
             the leaderboard never forgets
@@ -315,9 +320,9 @@ function WallOfShame({ entries }: { entries: LeaderboardEntry[] }) {
           <div className="shame-row text-xs uppercase tracking-wider text-text-muted font-bold bg-[#0f172a] border-b-4 border-black">
             <span>#</span>
             <span></span>
-            <span>The Homie</span>
+            <span>Wallet</span>
             <span>W / L</span>
-            <span className="text-right">Total Ls</span>
+            <span className="text-right">Total Ws</span>
           </div>
 
           {entries.map((entry, i) => {
@@ -325,15 +330,15 @@ function WallOfShame({ entries }: { entries: LeaderboardEntry[] }) {
             const avatar = AVATAR_POOL[i % AVATAR_POOL.length];
             const badge = getBadge(entry, rank);
             return (
-              <div key={entry.username} className="shame-row text-sm">
+              <div key={entry.walletAddress} className="shame-row text-sm">
                 <span className="font-black text-[#fbbf24]">
                   {rank}
                 </span>
                 <span className="text-xl">{avatar}</span>
                 <div>
-                  <span className="font-bold text-text-primary">{entry.username}</span>
+                  <span className="font-bold text-text-primary font-mono">{truncateWallet(entry.walletAddress)}</span>
                   {badge && (
-                    <span className="ml-2 text-[0.6rem] font-bold uppercase px-2 py-0.5 bg-[#f43f5e] text-white border-2 border-black inline-block">
+                    <span className="ml-2 text-[0.6rem] font-bold uppercase px-2 py-0.5 bg-[#4ade80] text-black border-2 border-black inline-block">
                       {badge}
                     </span>
                   )}
@@ -341,8 +346,8 @@ function WallOfShame({ entries }: { entries: LeaderboardEntry[] }) {
                 <span className="font-bold">
                   {entry.wins}W / {entry.losses}L
                 </span>
-                <span className="text-right font-black text-[#f43f5e]">
-                  {entry.losses}
+                <span className="text-right font-black text-[#4ade80]">
+                  {entry.wins}
                 </span>
               </div>
             );
@@ -368,7 +373,7 @@ function FAQSection() {
     },
     {
       q: "what if my homie is a fraud",
-      a: "the bot tracks everyone's record. duck a bet and your reputation is cooked forever. the wall of shame never forgets. accountability era.",
+      a: "the bot tracks everyone's record. duck a bet and your reputation is cooked forever. the wall of fame never forgets. accountability era.",
     },
   ];
 
@@ -582,7 +587,7 @@ export default function Home() {
       <Navbar />
       <HeroSection stats={stats} />
       <HowItWorks />
-      <WallOfShame entries={leaderboard} />
+      <WallOfFame entries={leaderboard} />
       <FAQSection />
       <CTASection />
       <Footer />
