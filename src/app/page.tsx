@@ -394,7 +394,7 @@ function FAQSection() {
     },
     {
       q: "what if my homie is a fraud",
-      a: "the bot tracks everyone's record. duck a bet and your reputation is cooked forever. the wall of fame never forgets. accountability era.",
+      a: "every group has its own escrow address. funds are locked until the bet resolves, then sent straight to the winner's wallet. no trust needed — the code handles it.",
     },
   ];
 
