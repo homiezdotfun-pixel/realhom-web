@@ -422,6 +422,15 @@ function Footer() {
               Telegram Bot
             </a>
             <span className="text-text-muted/30">|</span>
+            <a
+              href="https://x.com/homiezdotfun"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[#4ade80] transition-colors"
+            >
+              X / Twitter
+            </a>
+            <span className="text-text-muted/30">|</span>
             <span>&copy; 2025 homiez.fun — not financial advice lmao</span>
           </div>
         </div>
