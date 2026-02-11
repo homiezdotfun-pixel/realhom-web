@@ -333,8 +333,6 @@ function LiveBetsSection() {
   const bets = [
     {
       id: 1,
-      creator: "CryptoKing",
-      opponent: "DiamondHands",
       bet: "BTC hits $150K before July",
       amount: "$500",
       status: "live",
@@ -342,8 +340,6 @@ function LiveBetsSection() {
     },
     {
       id: 2,
-      creator: "NBAFan99",
-      opponent: "HoopDreams",
       bet: "Celtics win the Finals",
       amount: "$200",
       status: "live",
@@ -351,8 +347,6 @@ function LiveBetsSection() {
     },
     {
       id: 3,
-      creator: "SolMaxi",
-      opponent: "ETHBull",
       bet: "SOL flips ETH market cap by 2027",
       amount: "$1,000",
       status: "live",
@@ -360,18 +354,13 @@ function LiveBetsSection() {
     },
     {
       id: 4,
-      creator: "FoodieAlex",
-      opponent: "GymBro",
       bet: "I'll lose 20lbs by March",
       amount: "$150",
       status: "settled",
-      winner: "GymBro",
       time: "3d ago",
     },
     {
       id: 5,
-      creator: "TechNerd",
-      opponent: "AISkeptic",
       bet: "GPT-5 drops before June",
       amount: "$300",
       status: "live",
@@ -418,19 +407,9 @@ function LiveBetsSection() {
                     <span className="text-text-muted text-xs">{bet.time}</span>
                   </div>
 
-                  <p className="text-text-primary font-medium mb-2">
+                  <p className="text-text-primary font-medium">
                     &quot;{bet.bet}&quot;
                   </p>
-
-                  <div className="flex items-center gap-2 text-xs text-text-secondary">
-                    <span className="text-accent-light font-medium">
-                      @{bet.creator}
-                    </span>
-                    <span className="text-text-muted">vs</span>
-                    <span className="text-neon-pink font-medium">
-                      @{bet.opponent}
-                    </span>
-                  </div>
                 </div>
 
                 <div className="text-right">
@@ -440,11 +419,6 @@ function LiveBetsSection() {
                   >
                     {bet.amount}
                   </div>
-                  {bet.winner && (
-                    <span className="text-xs text-green-400">
-                      Won by @{bet.winner}
-                    </span>
-                  )}
                 </div>
               </div>
             </div>
