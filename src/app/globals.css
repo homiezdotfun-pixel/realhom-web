@@ -131,9 +131,15 @@
    ════════════════════════════════════════════ */
 .brutal-card {
   background: var(--color-bg-card);
-  border: 4px solid #000;
-  box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+  border: 3px solid #000;
+  box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 1);
   transition: transform 0.15s, box-shadow 0.15s;
+}
+@media (min-width: 640px) {
+  .brutal-card {
+    border-width: 4px;
+    box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+  }
 }
 .brutal-card:hover {
   transform: translate(-2px, -2px);
@@ -148,13 +154,20 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 1rem 2.5rem;
+  padding: 0.75rem 1.5rem;
   border: 4px solid #000;
   cursor: pointer;
   transition: transform 0.1s, box-shadow 0.1s;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  font-size: 0.875rem;
+}
+@media (min-width: 640px) {
+  .btn-brutal {
+    padding: 1rem 2.5rem;
+    font-size: inherit;
+  }
 }
 .btn-brutal-green {
   background: #4ade80;
@@ -211,15 +224,25 @@
 }
 
 /* ════════════════════════════════════════════
-   Wall of Shame table
+   Wall of Fame table
    ════════════════════════════════════════════ */
 .shame-row {
   display: grid;
-  grid-template-columns: 3rem 2.5rem 1fr 7rem 5rem;
+  grid-template-columns: 2rem 2rem 1fr 5rem 3.5rem;
   align-items: center;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 0.75rem;
   border-bottom: 3px solid #000;
   transition: background 0.15s;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+}
+@media (min-width: 640px) {
+  .shame-row {
+    grid-template-columns: 3rem 2.5rem 1fr 7rem 5rem;
+    padding: 0.75rem 1rem;
+    gap: 0;
+    font-size: inherit;
+  }
 }
 .shame-row:last-child {
   border-bottom: none;
@@ -238,4 +261,10 @@
   opacity: 0.35;
   font-size: 1.5rem;
   animation: float 6s ease-in-out infinite;
+  display: none;
+}
+@media (min-width: 768px) {
+  .sticker {
+    display: block;
+  }
 }

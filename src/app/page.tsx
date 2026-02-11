@@ -41,10 +41,29 @@ function formatCount(n: number): string {
 
 const AVATAR_POOL = ["😎", "💅", "🧠", "🍗", "🛡️", "🔥", "👑", "🤡", "💎", "🚀"];
 
-function truncateWallet(addr: string): string {
+function truncateWallet(addr: string | null | undefined): string {
+  if (!addr || typeof addr !== "string") return "???";
   if (addr.length <= 10) return addr;
   return `${addr.slice(0, 4)}...${addr.slice(-4)}`;
 }
+
+function isValidStats(d: unknown): d is StatsData {
+  if (!d || typeof d !== "object") return false;
+  const obj = d as Record<string, unknown>;
+  return (
+    typeof obj.totalBets === "number" &&
+    typeof obj.totalVolumeUsd === "number" &&
+    typeof obj.totalUsers === "number"
+  );
+}
+
+function isValidLeaderboard(d: unknown): d is { leaderboard: LeaderboardEntry[] } {
+  if (!d || typeof d !== "object") return false;
+  const obj = d as Record<string, unknown>;
+  return Array.isArray(obj.leaderboard);
+}
+
+const MAX_LEADERBOARD_ENTRIES = 10;
 
 function getBadge(entry: LeaderboardEntry, rank: number): string | null {
   if (rank === 1) return "Top Degen";
@@ -108,10 +127,11 @@ function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <DogeLogo size={36} />
-          <span className="text-xl font-black tracking-tight">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <DogeLogo size={28} className="sm:hidden" />
+          <DogeLogo size={36} className="hidden sm:block" />
+          <span className="text-lg sm:text-xl font-black tracking-tight">
             homiez<span className="text-[#4ade80]">.fun</span>
           </span>
         </div>
@@ -159,12 +179,13 @@ function HeroSection({ stats }: { stats: StatsData | null }) {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
         {/* Doge mascot */}
-        <div className="mb-6 animate-float flex justify-center">
-          <DogeLogo size={120} />
+        <div className="mb-4 sm:mb-6 animate-float flex justify-center">
+          <DogeLogo size={80} className="sm:hidden" />
+          <DogeLogo size={120} className="hidden sm:block" />
         </div>
 
         {/* Title */}
-        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black italic uppercase leading-[0.95] mb-6 animate-slide-up stagger-1">
+        <h1 className="text-4xl sm:text-7xl lg:text-8xl font-black italic uppercase leading-[0.95] mb-4 sm:mb-6 animate-slide-up stagger-1">
           Bet Against
           <br />
           <span className="text-[#4ade80]">Your Homiez.</span>
@@ -196,16 +217,16 @@ function HeroSection({ stats }: { stats: StatsData | null }) {
         </div>
 
         {/* Stats */}
-        <div className="mt-16 flex items-center justify-center gap-6 sm:gap-14 animate-slide-up stagger-4">
+        <div className="mt-12 sm:mt-16 flex flex-wrap items-center justify-center gap-3 sm:gap-14 animate-slide-up stagger-4">
           {statItems.map((stat) => (
             <div
               key={stat.label}
-              className="brutal-card px-5 py-3 text-center"
+              className="brutal-card px-3 py-2 sm:px-5 sm:py-3 text-center min-w-[5.5rem]"
             >
-              <div className="text-2xl sm:text-3xl font-black text-[#4ade80]">
+              <div className="text-lg sm:text-3xl font-black text-[#4ade80]">
                 {stat.value}
               </div>
-              <div className="text-xs text-text-muted mt-1 uppercase tracking-wider font-bold">
+              <div className="text-[0.6rem] sm:text-xs text-text-muted mt-1 uppercase tracking-wider font-bold">
                 {stat.label}
               </div>
             </div>
@@ -245,19 +266,19 @@ function HowItWorks() {
   ];
 
   return (
-    <section id="how" className="relative py-28 z-10">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-black italic uppercase">
+    <section id="how" className="relative py-16 sm:py-28 z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-10 sm:mb-16">
+          <h2 className="text-3xl sm:text-5xl font-black italic uppercase">
             How It <span className="text-[#c084fc]">Works</span>
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-5 sm:gap-8">
           {steps.map((step, i) => (
             <div
               key={step.num}
-              className="brutal-card p-8 relative animate-float"
+              className="brutal-card p-5 sm:p-8 relative animate-float"
               style={{ animationDelay: `${i * 0.6}s` }}
             >
               {/* Step number */}
@@ -288,10 +309,10 @@ function HowItWorks() {
 function WallOfFame({ entries }: { entries: LeaderboardEntry[] }) {
   if (entries.length === 0) {
     return (
-      <section id="fame" className="relative py-28 z-10">
-        <div className="max-w-3xl mx-auto px-6">
+      <section id="fame" className="relative py-16 sm:py-28 z-10">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
-            <h2 className="text-4xl sm:text-5xl font-black italic uppercase">
+            <h2 className="text-3xl sm:text-5xl font-black italic uppercase">
               Wall of <span className="text-[#4ade80]">Fame</span>
             </h2>
             <p className="text-text-muted mt-3 text-sm uppercase tracking-wider font-bold">
@@ -304,10 +325,10 @@ function WallOfFame({ entries }: { entries: LeaderboardEntry[] }) {
   }
 
   return (
-    <section id="fame" className="relative py-28 z-10">
-      <div className="max-w-3xl mx-auto px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-black italic uppercase">
+    <section id="fame" className="relative py-16 sm:py-28 z-10">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-10 sm:mb-12">
+          <h2 className="text-3xl sm:text-5xl font-black italic uppercase">
             Wall of <span className="text-[#4ade80]">Fame</span>
           </h2>
           <p className="text-text-muted mt-3 text-sm uppercase tracking-wider font-bold">
@@ -380,10 +401,10 @@ function FAQSection() {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <section id="faq" className="relative py-28 z-10">
-      <div className="max-w-3xl mx-auto px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-black italic uppercase">
+    <section id="faq" className="relative py-16 sm:py-28 z-10">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-10 sm:mb-12">
+          <h2 className="text-3xl sm:text-5xl font-black italic uppercase">
             FAQ <span className="text-[#c084fc]">(for the confused)</span>
           </h2>
         </div>
@@ -429,9 +450,9 @@ function FAQSection() {
    ═══════════════════════════════════════════════════════ */
 function CTASection() {
   return (
-    <section className="relative py-28 z-10">
-      <div className="max-w-4xl mx-auto px-6 text-center">
-        <h2 className="text-4xl sm:text-6xl font-black italic uppercase mb-6">
+    <section className="relative py-16 sm:py-28 z-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        <h2 className="text-3xl sm:text-6xl font-black italic uppercase mb-4 sm:mb-6">
           Stop being a
           <br />
           <span className="text-[#4ade80]">spectator.</span>
@@ -469,7 +490,7 @@ function Footer() {
             </span>
           </div>
 
-          <div className="flex items-center gap-6 text-sm text-text-muted font-bold">
+          <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 sm:gap-6 text-xs sm:text-sm text-text-muted font-bold">
             <a
               href={TG_BOT_LINK}
               target="_blank"
@@ -487,8 +508,8 @@ function Footer() {
             >
               X / Twitter
             </a>
-            <span className="text-text-muted/30">|</span>
-            <span>&copy; 2026 homiez.fun — not financial advice lmao</span>
+            <span className="hidden sm:inline text-text-muted/30">|</span>
+            <span className="w-full sm:w-auto text-center">&copy; 2026 homiez.fun — not financial advice lmao</span>
           </div>
         </div>
       </div>
@@ -499,7 +520,7 @@ function Footer() {
 /* ═══════════════════════════════════════════════════════
    Doge Logo (pixel-art Shiba)
    ═══════════════════════════════════════════════════════ */
-function DogeLogo({ size = 40 }: { size?: number }) {
+function DogeLogo({ size = 40, className }: { size?: number; className?: string }) {
   return (
     <svg
       width={size}
@@ -507,6 +528,7 @@ function DogeLogo({ size = 40 }: { size?: number }) {
       viewBox="0 0 64 64"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
       style={{ display: "block" }}
     >
       {/* Ears */}
@@ -570,13 +592,25 @@ export default function Home() {
 
   useEffect(() => {
     fetch(`${API_BASE}/stats`)
-      .then((r) => r.json())
-      .then((d) => setStats(d))
+      .then((r) => {
+        if (!r.ok) throw new Error(`stats: ${r.status}`);
+        return r.json();
+      })
+      .then((d) => {
+        if (isValidStats(d)) setStats(d);
+      })
       .catch(() => {});
 
     fetch(`${API_BASE}/leaderboard`)
-      .then((r) => r.json())
-      .then((d) => setLeaderboard(d.leaderboard ?? []))
+      .then((r) => {
+        if (!r.ok) throw new Error(`leaderboard: ${r.status}`);
+        return r.json();
+      })
+      .then((d) => {
+        if (isValidLeaderboard(d)) {
+          setLeaderboard(d.leaderboard.slice(0, MAX_LEADERBOARD_ENTRIES));
+        }
+      })
       .catch(() => {});
   }, []);
 
