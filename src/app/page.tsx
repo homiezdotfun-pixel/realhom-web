@@ -40,9 +40,6 @@ function Navbar() {
           <a href="#features" className="hover:text-text-primary transition-colors">
             Features
           </a>
-          <a href="#bets" className="hover:text-text-primary transition-colors">
-            Live Bets
-          </a>
           <a href="#faq" className="hover:text-text-primary transition-colors">
             FAQ
           </a>
@@ -329,118 +326,6 @@ function FeaturesSection() {
   );
 }
 
-function LiveBetsSection() {
-  const bets = [
-    {
-      id: 1,
-      bet: "BTC hits $150K before July",
-      amount: "$500",
-      status: "live",
-      time: "2h ago",
-    },
-    {
-      id: 2,
-      bet: "Celtics win the Finals",
-      amount: "$200",
-      status: "live",
-      time: "5h ago",
-    },
-    {
-      id: 3,
-      bet: "SOL flips ETH market cap by 2027",
-      amount: "$1,000",
-      status: "live",
-      time: "1d ago",
-    },
-    {
-      id: 4,
-      bet: "I'll lose 20lbs by March",
-      amount: "$150",
-      status: "settled",
-      time: "3d ago",
-    },
-    {
-      id: 5,
-      bet: "GPT-5 drops before June",
-      amount: "$300",
-      status: "live",
-      time: "12h ago",
-    },
-  ];
-
-  return (
-    <section id="bets" className="relative py-32">
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-pink/30 to-transparent" />
-
-      <div className="max-w-5xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <span className="text-neon-green text-sm font-mono uppercase tracking-[0.3em]">
-            // Live Feed
-          </span>
-          <h2
-            className="text-4xl sm:text-5xl font-bold mt-4"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-          >
-            What the homiez are{" "}
-            <span className="text-neon-green">beefing about</span>
-          </h2>
-        </div>
-
-        <div className="space-y-4">
-          {bets.map((bet) => (
-            <div
-              key={bet.id}
-              className="group p-6 rounded-2xl bg-bg-card border border-border hover:border-accent/20 transition-all duration-300 hover:bg-bg-card-hover"
-            >
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span
-                      className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-                        bet.status === "live"
-                          ? "bg-green-500/20 text-green-400"
-                          : "bg-text-muted/20 text-text-muted"
-                      }`}
-                    >
-                      {bet.status === "live" ? "● LIVE" : "SETTLED"}
-                    </span>
-                    <span className="text-text-muted text-xs">{bet.time}</span>
-                  </div>
-
-                  <p className="text-text-primary font-medium">
-                    &quot;{bet.bet}&quot;
-                  </p>
-                </div>
-
-                <div className="text-right">
-                  <div
-                    className="text-xl font-bold text-accent-gold"
-                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                  >
-                    {bet.amount}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="text-center mt-10">
-          <a
-            href={TG_BOT_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-accent/30 text-accent-light hover:bg-accent/10 transition-all text-sm font-medium"
-          >
-            see the full degenerate feed
-            <span className="text-lg">→</span>
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function FAQSection() {
   const faqs = [
     {
@@ -611,7 +496,6 @@ export default function Home() {
       <HeroSection />
       <HowItWorks />
       <FeaturesSection />
-      <LiveBetsSection />
       <FAQSection />
       <CTASection />
       <Footer />
