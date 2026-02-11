@@ -152,7 +152,7 @@ function HeroSection() {
         <div className="mt-16 flex items-center justify-center gap-6 sm:gap-14 animate-slide-up stagger-4">
           {[
             { value: "2.4K+", label: "Bets Placed" },
-            { value: "$180K", label: "Bags Lost" },
+            { value: "$180K", label: "Volume" },
             { value: "890+", label: "Degens" },
           ].map((stat) => (
             <div
