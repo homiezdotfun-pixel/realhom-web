@@ -129,8 +129,8 @@ function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
         <div className="flex items-center gap-2 sm:gap-3">
-          <DogeLogo size={28} className="sm:hidden" />
-          <DogeLogo size={36} className="hidden sm:block" />
+          <div className="sm:hidden"><DogeLogo size={28} /></div>
+          <div className="hidden sm:block"><DogeLogo size={36} /></div>
           <span className="text-lg sm:text-xl font-black tracking-tight">
             homiez<span className="text-[#4ade80]">.fun</span>
           </span>
@@ -180,8 +180,8 @@ function HeroSection({ stats }: { stats: StatsData | null }) {
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
         {/* Doge mascot */}
         <div className="mb-4 sm:mb-6 animate-float flex justify-center">
-          <DogeLogo size={80} className="sm:hidden" />
-          <DogeLogo size={120} className="hidden sm:block" />
+          <div className="sm:hidden"><DogeLogo size={80} /></div>
+          <div className="hidden sm:block"><DogeLogo size={120} /></div>
         </div>
 
         {/* Title */}
@@ -520,7 +520,7 @@ function Footer() {
 /* ═══════════════════════════════════════════════════════
    Doge Logo (pixel-art Shiba)
    ═══════════════════════════════════════════════════════ */
-function DogeLogo({ size = 40, className }: { size?: number; className?: string }) {
+function DogeLogo({ size = 40 }: { size?: number }) {
   return (
     <svg
       width={size}
@@ -528,7 +528,6 @@ function DogeLogo({ size = 40, className }: { size?: number; className?: string 
       viewBox="0 0 64 64"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
       style={{ display: "block" }}
     >
       {/* Ears */}
