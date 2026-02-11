@@ -431,7 +431,7 @@ function Footer() {
               X / Twitter
             </a>
             <span className="text-text-muted/30">|</span>
-            <span>&copy; 2025 homiez.fun — not financial advice lmao</span>
+            <span>&copy; 2026 homiez.fun — not financial advice lmao</span>
           </div>
         </div>
       </div>
