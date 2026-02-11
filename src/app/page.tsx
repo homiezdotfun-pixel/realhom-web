@@ -4,6 +4,172 @@ import { useState, useEffect } from "react";
 
 const TG_BOT_LINK = "https://t.me/homiezdotfun_bot";
 
+/* ═══════════════════════════════════════════════════════
+   Data constants
+   ═══════════════════════════════════════════════════════ */
+
+const LIVE_BETS = [
+  { user: "degen_mike", bet: "Lakers ML tonight", amount: "$50", emoji: "🏀" },
+  { user: "cryptoSis99", bet: "ETH above 4k by Friday", amount: "$200", emoji: "📈" },
+  { user: "wingKing", bet: "I eat 50 nuggs in 1hr", amount: "$30", emoji: "🍗" },
+  { user: "rug_survivor", bet: "BTC flips gold this cycle", amount: "$500", emoji: "🪙" },
+  { user: "sadBoi42", bet: "Celtics sweep playoffs", amount: "$75", emoji: "🍀" },
+  { user: "alphaLeaker", bet: "SOL hits $300 next month", amount: "$150", emoji: "🚀" },
+  { user: "npcTrader", bet: "My portfolio stays green", amount: "$100", emoji: "🤡" },
+  { user: "bag_fumbler", bet: "I quit fast food for a week", amount: "$20", emoji: "🍔" },
+];
+
+const LEADERBOARD = [
+  { rank: 1, name: "degen_mike", wl: "42-8", pnl: "+$4,200", emoji: "👑" },
+  { rank: 2, name: "cryptoSis99", wl: "38-12", pnl: "+$3,100", emoji: "🔥" },
+  { rank: 3, name: "alphaLeaker", wl: "35-15", pnl: "+$2,800", emoji: "💎" },
+  { rank: 4, name: "wingKing", wl: "30-20", pnl: "+$1,500", emoji: "🍗" },
+  { rank: 5, name: "rug_survivor", wl: "28-22", pnl: "+$900", emoji: "🛡️" },
+  { rank: 6, name: "sadBoi42", wl: "25-25", pnl: "+$200", emoji: "😢" },
+  { rank: 7, name: "bag_fumbler", wl: "10-40", pnl: "-$2,100", emoji: "💀" },
+];
+
+const FLOATING_STICKERS = [
+  { content: "🐕", top: "8%", left: "3%", delay: "0s", size: "2rem" },
+  { content: "W", top: "15%", left: "92%", delay: "1s", size: "1.2rem" },
+  { content: "💀", top: "35%", left: "5%", delay: "2s", size: "1.8rem" },
+  { content: "📈", top: "50%", left: "95%", delay: "0.5s", size: "1.6rem" },
+  { content: "L", top: "65%", left: "2%", delay: "3s", size: "1.2rem" },
+  { content: "🚀", top: "78%", left: "93%", delay: "1.5s", size: "1.8rem" },
+  { content: "🤡", top: "88%", left: "6%", delay: "2.5s", size: "1.6rem" },
+  { content: "💰", top: "25%", left: "96%", delay: "0.8s", size: "1.8rem" },
+  { content: "🔥", top: "45%", left: "1%", delay: "1.8s", size: "1.5rem" },
+  { content: "GG", top: "70%", left: "97%", delay: "3.5s", size: "1rem" },
+];
+
+const colorMap: Record<string, { dot: string; text: string }> = {
+  cyan: { dot: "bg-[#00fff0]", text: "text-[#00fff0]" },
+  pink: { dot: "bg-[#ff00ff]", text: "text-[#ff00ff]" },
+  gold: { dot: "bg-[#fbbf24]", text: "text-[#fbbf24]" },
+  green: { dot: "bg-[#39ff14]", text: "text-[#39ff14]" },
+  purple: { dot: "bg-[#8b5cf6]", text: "text-[#8b5cf6]" },
+  blue: { dot: "bg-[#38bdf8]", text: "text-[#38bdf8]" },
+};
+
+const PIXEL_FONT = "'Press Start 2P', monospace";
+
+/* ═══════════════════════════════════════════════════════
+   Floating Stickers
+   ═══════════════════════════════════════════════════════ */
+function FloatingStickers() {
+  return (
+    <>
+      {FLOATING_STICKERS.map((s, i) => (
+        <span
+          key={i}
+          className="sticker"
+          style={{
+            top: s.top,
+            left: s.left,
+            fontSize: s.size,
+            animationDelay: s.delay,
+          }}
+        >
+          {s.content}
+        </span>
+      ))}
+    </>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   Live Bets Ticker
+   ═══════════════════════════════════════════════════════ */
+function LiveBetsTicker() {
+  const doubled = [...LIVE_BETS, ...LIVE_BETS];
+  return (
+    <div className="ticker-strip py-3 relative z-10">
+      <div className="flex items-center">
+        {/* LIVE badge */}
+        <span
+          className="shrink-0 mx-4 px-3 py-1 bg-[#39ff14] text-[#0a0014] text-[0.6rem] font-bold rounded animate-arcade-pulse"
+          style={{ fontFamily: PIXEL_FONT }}
+        >
+          LIVE
+        </span>
+        <div className="ticker-strip-inner">
+          {doubled.map((bet, i) => (
+            <span
+              key={i}
+              className="inline-flex items-center gap-2 mx-6 text-sm text-text-secondary"
+            >
+              <span>{bet.emoji}</span>
+              <span className="text-[#00fff0] font-medium">{bet.user}</span>
+              <span className="text-text-muted">—</span>
+              <span>{bet.bet}</span>
+              <span className="text-[#39ff14] font-bold">{bet.amount}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   Leaderboard Section
+   ═══════════════════════════════════════════════════════ */
+function LeaderboardSection() {
+  return (
+    <section className="relative py-32">
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00fff0]/30 to-transparent" />
+      <div className="max-w-3xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <span
+            className="text-[#39ff14] text-xs uppercase tracking-[0.3em]"
+            style={{ fontFamily: PIXEL_FONT }}
+          >
+            // Leaderboard
+          </span>
+          <h2
+            className="text-2xl sm:text-3xl font-bold mt-4 text-glow-cyan"
+            style={{ fontFamily: PIXEL_FONT }}
+          >
+            Top Degenerates
+          </h2>
+        </div>
+
+        <div className="glass glow-border rounded-2xl overflow-hidden">
+          {/* Header */}
+          <div className="leaderboard-row text-[0.6rem] uppercase tracking-wider text-text-muted border-b border-[#00fff0]/15"
+            style={{ fontFamily: PIXEL_FONT }}
+          >
+            <span>#</span>
+            <span>Name</span>
+            <span>W-L</span>
+            <span className="text-right">P&amp;L</span>
+          </div>
+
+          {LEADERBOARD.map((row) => (
+            <div key={row.rank} className="leaderboard-row text-sm">
+              <span className="text-[#fbbf24] font-bold">
+                {row.rank <= 3 ? row.emoji : `${row.rank}`}
+              </span>
+              <span className="text-[#00fff0] font-medium">{row.name}</span>
+              <span className="text-text-secondary">{row.wl}</span>
+              <span
+                className={`text-right font-bold ${
+                  row.pnl.startsWith("+") ? "text-[#39ff14]" : "text-[#ff00ff]"
+                }`}
+              >
+                {row.pnl}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   Navbar
+   ═══════════════════════════════════════════════════════ */
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
@@ -17,30 +183,28 @@ function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "glass shadow-lg shadow-accent/10"
+          ? "glass shadow-lg shadow-[#00fff0]/10"
           : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-neon-pink flex items-center justify-center text-lg font-bold">
-            H
-          </div>
+          <span className="text-2xl">🐕</span>
           <span
-            className="text-xl font-bold tracking-tight"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            className="text-sm text-glow-cyan"
+            style={{ fontFamily: PIXEL_FONT }}
           >
-            Homiez<span className="text-accent-light">.fun</span>
+            Homiez<span className="text-[#39ff14]">.fun</span>
           </span>
         </div>
         <div className="hidden md:flex items-center gap-8 text-sm text-text-secondary">
-          <a href="#how" className="hover:text-text-primary transition-colors">
+          <a href="#how" className="hover:text-[#00fff0] transition-colors">
             How It Works
           </a>
-          <a href="#features" className="hover:text-text-primary transition-colors">
+          <a href="#features" className="hover:text-[#00fff0] transition-colors">
             Features
           </a>
-          <a href="#faq" className="hover:text-text-primary transition-colors">
+          <a href="#faq" className="hover:text-[#00fff0] transition-colors">
             FAQ
           </a>
         </div>
@@ -48,7 +212,7 @@ function Navbar() {
           href={TG_BOT_LINK}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-accent to-neon-pink text-white text-sm font-semibold hover:opacity-90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-accent/25"
+          className="btn-arcade text-[0.55rem] py-2 px-4"
         >
           Launch Bot
         </a>
@@ -57,47 +221,46 @@ function Navbar() {
   );
 }
 
+/* ═══════════════════════════════════════════════════════
+   Hero Section
+   ═══════════════════════════════════════════════════════ */
 function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden noise-bg">
-      {/* Grid background */}
-      <div className="absolute inset-0 opacity-[0.04]">
-        <div
-          className="w-full h-full"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(124,58,237,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(124,58,237,0.3) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
-      </div>
+      {/* Neon grid floor */}
+      <div className="neon-grid" />
 
       {/* Gradient orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[128px] animate-float" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#8b5cf6]/20 rounded-full blur-[128px] animate-float" />
       <div
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-neon-pink/15 rounded-full blur-[128px] animate-float"
+        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#ff00ff]/15 rounded-full blur-[128px] animate-float"
         style={{ animationDelay: "3s" }}
       />
       <div
-        className="absolute top-1/3 right-1/3 w-64 h-64 bg-neon-green/10 rounded-full blur-[128px] animate-float"
+        className="absolute top-1/3 right-1/3 w-64 h-64 bg-[#00fff0]/10 rounded-full blur-[128px] animate-float"
         style={{ animationDelay: "1.5s" }}
       />
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+        {/* Shiba mascot */}
+        <div className="text-7xl sm:text-8xl mb-4 animate-float animate-neon-flicker">
+          🐕
+        </div>
+
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-xs text-accent-light mb-8 animate-slide-up">
-          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-xs text-[#00fff0] mb-8 animate-slide-up">
+          <span className="w-2 h-2 rounded-full bg-[#39ff14] animate-pulse" />
           we&apos;re so back — 2,400+ bets placed fr fr
         </div>
 
         {/* Title */}
         <h1
-          className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-[0.95] mb-6 animate-slide-up stagger-1"
-          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.2] mb-6 animate-slide-up stagger-1 text-glow-cyan"
+          style={{ fontFamily: PIXEL_FONT }}
         >
           Bet Against
           <br />
-          <span className="bg-gradient-to-r from-accent via-neon-pink to-accent-gold bg-clip-text text-transparent animate-gradient">
+          <span className="text-[#ff00ff] text-glow-pink">
             Your Homiez
           </span>
         </h1>
@@ -107,7 +270,7 @@ function HeroSection() {
           talk is cheap. prove you&apos;re not all bark. put your bag where your mouth is.
           <br className="hidden sm:block" />
           the{" "}
-          <span className="text-accent-light font-medium">
+          <span className="text-[#00fff0] font-medium">
             social betting platform
           </span>{" "}
           that separates the real ones from the cap merchants.
@@ -119,22 +282,20 @@ function HeroSection() {
             href={TG_BOT_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-accent to-neon-pink text-white font-bold text-lg hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-accent/30 animate-pulse-glow"
+            className="btn-arcade animate-arcade-pulse"
           >
-            <span className="flex items-center gap-3">
-              <TelegramIcon />
-              let him cook
-            </span>
+            <TelegramIcon />
+            let him cook
           </a>
           <a
             href="#how"
-            className="px-8 py-4 rounded-2xl border border-border hover:border-accent/50 text-text-secondary hover:text-text-primary transition-all font-medium text-lg"
+            className="btn-arcade-pink"
           >
             explain like i&apos;m 5
           </a>
         </div>
 
-        {/* Stats ticker */}
+        {/* Stats */}
         <div className="mt-16 flex items-center justify-center gap-8 sm:gap-16 animate-slide-up stagger-4">
           {[
             { value: "2.4K+", label: "Bets Placed" },
@@ -143,8 +304,8 @@ function HeroSection() {
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <div
-                className="text-2xl sm:text-3xl font-bold text-text-primary"
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                className="text-2xl sm:text-3xl font-bold text-[#00fff0] text-glow-cyan"
+                style={{ fontFamily: PIXEL_FONT }}
               >
                 {stat.value}
               </div>
@@ -157,11 +318,14 @@ function HeroSection() {
       </div>
 
       {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-bg-dark to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0014] to-transparent" />
     </section>
   );
 }
 
+/* ═══════════════════════════════════════════════════════
+   How It Works
+   ═══════════════════════════════════════════════════════ */
 function HowItWorks() {
   const steps = [
     {
@@ -188,15 +352,18 @@ function HowItWorks() {
     <section id="how" className="relative py-32 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-20">
-          <span className="text-accent text-sm font-mono uppercase tracking-[0.3em]">
+          <span
+            className="text-[#39ff14] text-xs uppercase tracking-[0.3em]"
+            style={{ fontFamily: PIXEL_FONT }}
+          >
             // How It Works
           </span>
           <h2
-            className="text-4xl sm:text-5xl font-bold mt-4"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            className="text-xl sm:text-2xl font-bold mt-4 text-glow-green"
+            style={{ fontFamily: PIXEL_FONT }}
           >
             three steps.{" "}
-            <span className="text-text-muted">zero excuses. skill issue if you can&apos;t.</span>
+            <span className="text-text-muted">zero excuses.</span>
           </h2>
         </div>
 
@@ -204,18 +371,19 @@ function HowItWorks() {
           {steps.map((step, i) => (
             <div
               key={step.num}
-              className="group relative p-8 rounded-3xl bg-bg-card border border-border hover:border-accent/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-accent/5"
+              className="group relative p-8 rounded-2xl glass glow-border animate-border-glow hover:-translate-y-2 transition-transform duration-500"
+              style={{ animationDelay: `${i * 0.5}s` }}
             >
               {/* Step number */}
-              <span className="text-6xl font-black text-border group-hover:text-accent/20 transition-colors absolute top-6 right-6">
+              <span className="text-6xl font-black text-[#8b5cf6]/20 group-hover:text-[#8b5cf6]/40 transition-colors absolute top-6 right-6">
                 {step.num}
               </span>
 
               <div className="text-4xl mb-6">{step.icon}</div>
 
               <h3
-                className="text-xl font-bold mb-3"
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                className="text-xs font-bold mb-3 text-[#39ff14] text-glow-green"
+                style={{ fontFamily: PIXEL_FONT }}
               >
                 {step.title}
               </h3>
@@ -225,8 +393,8 @@ function HowItWorks() {
               </p>
 
               {i < steps.length - 1 && (
-                <div className="hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 text-text-muted text-2xl">
-                  →
+                <div className="hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 text-[#00fff0] text-2xl text-glow-cyan">
+                  &gt;
                 </div>
               )}
             </div>
@@ -237,55 +405,61 @@ function HowItWorks() {
   );
 }
 
+/* ═══════════════════════════════════════════════════════
+   Features Section
+   ═══════════════════════════════════════════════════════ */
 function FeaturesSection() {
   const features = [
     {
       title: "Peer-to-Peer Bets",
       desc: "no house edge. no middleman. just you and your homie finding out who's actually him.",
-      gradient: "from-accent to-blue-500",
+      color: "cyan" as const,
     },
     {
       title: "Group Betting",
       desc: "drop a bet in the gc and watch chaos unfold. your whole squad can get in on it.",
-      gradient: "from-neon-pink to-accent-hot",
+      color: "pink" as const,
     },
     {
       title: "Instant Settlement",
       desc: "winnings hit your wallet immediately. speedrun to getting paid.",
-      gradient: "from-accent-gold to-orange-500",
+      color: "gold" as const,
     },
     {
       title: "Bet on Anything",
       desc: "sports, crypto, who eats more wings — if you can argue about it at 2am, you can bet on it.",
-      gradient: "from-neon-green to-green-500",
+      color: "green" as const,
     },
     {
       title: "Leaderboard",
       desc: "ratio your friends. track who's the GOAT bettor in your crew. flex responsibly.",
-      gradient: "from-purple-500 to-accent",
+      color: "purple" as const,
     },
     {
       title: "Fully in Telegram",
       desc: "no app downloads. no signups. just vibes. open the bot and start printing W's.",
-      gradient: "from-blue-400 to-accent-light",
+      color: "blue" as const,
     },
   ];
 
   return (
     <section id="features" className="relative py-32">
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#ff00ff]/30 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-20">
-          <span className="text-accent-hot text-sm font-mono uppercase tracking-[0.3em]">
+          <span
+            className="text-[#ff00ff] text-xs uppercase tracking-[0.3em]"
+            style={{ fontFamily: PIXEL_FONT }}
+          >
             // Features
           </span>
           <h2
-            className="text-4xl sm:text-5xl font-bold mt-4"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            className="text-xl sm:text-2xl font-bold mt-4 text-glow-pink"
+            style={{ fontFamily: PIXEL_FONT }}
           >
             built different.{" "}
-            <span className="bg-gradient-to-r from-accent-hot to-accent-gold bg-clip-text text-transparent">
+            <span className="text-[#fbbf24] text-glow-purple">
               by degens.
             </span>{" "}
             for degens.
@@ -293,39 +467,40 @@ function FeaturesSection() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature) => (
-            <div
-              key={feature.title}
-              className="group relative p-8 rounded-3xl bg-bg-card border border-border hover:border-border-glow/30 transition-all duration-500 overflow-hidden"
-            >
-              {/* Hover gradient */}
+          {features.map((feature) => {
+            const colors = colorMap[feature.color];
+            return (
               <div
-                className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500`}
-              />
-
-              <div
-                className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${feature.gradient} opacity-80 mb-6 flex items-center justify-center`}
+                key={feature.title}
+                className="group relative p-8 rounded-2xl glass glow-border transition-all duration-500 overflow-hidden"
               >
-                <div className="w-3 h-3 bg-white rounded-full" />
+                <div
+                  className={`w-12 h-12 rounded-2xl ${colors.dot} opacity-80 mb-6 flex items-center justify-center`}
+                >
+                  <div className="w-3 h-3 bg-[#0a0014] rounded-full" />
+                </div>
+
+                <h3
+                  className={`text-xs font-bold mb-3 ${colors.text}`}
+                  style={{ fontFamily: PIXEL_FONT }}
+                >
+                  {feature.title}
+                </h3>
+                <p className="text-text-secondary text-sm leading-relaxed">
+                  {feature.desc}
+                </p>
               </div>
-
-              <h3
-                className="text-lg font-bold mb-3"
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-              >
-                {feature.title}
-              </h3>
-              <p className="text-text-secondary text-sm leading-relaxed">
-                {feature.desc}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
 
+/* ═══════════════════════════════════════════════════════
+   FAQ Section
+   ═══════════════════════════════════════════════════════ */
 function FAQSection() {
   const faqs = [
     {
@@ -354,16 +529,19 @@ function FAQSection() {
 
   return (
     <section id="faq" className="relative py-32">
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-gold/30 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#fbbf24]/30 to-transparent" />
 
       <div className="max-w-3xl mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="text-accent-gold text-sm font-mono uppercase tracking-[0.3em]">
+          <span
+            className="text-[#fbbf24] text-xs uppercase tracking-[0.3em]"
+            style={{ fontFamily: PIXEL_FONT }}
+          >
             // FAQ
           </span>
           <h2
-            className="text-4xl sm:text-5xl font-bold mt-4"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            className="text-xl sm:text-2xl font-bold mt-4 text-glow-cyan"
+            style={{ fontFamily: PIXEL_FONT }}
           >
             FAQ (for the confused ones)
           </h2>
@@ -373,15 +551,16 @@ function FAQSection() {
           {faqs.map((faq, i) => (
             <div
               key={i}
-              className="rounded-2xl bg-bg-card border border-border overflow-hidden transition-all"
+              className="rounded-2xl glass glow-border overflow-hidden animate-border-glow transition-all"
+              style={{ animationDelay: `${i * 0.3}s` }}
             >
               <button
                 onClick={() => setOpen(open === i ? null : i)}
-                className="w-full text-left p-6 flex items-center justify-between gap-4 hover:bg-bg-card-hover transition-colors"
+                className="w-full text-left p-6 flex items-center justify-between gap-4 hover:bg-[#1a0033]/50 transition-colors"
               >
                 <span className="font-medium">{faq.q}</span>
                 <span
-                  className={`text-accent-light transition-transform duration-300 text-xl ${
+                  className={`text-[#39ff14] text-glow-green transition-transform duration-300 text-xl ${
                     open === i ? "rotate-45" : ""
                   }`}
                 >
@@ -405,20 +584,24 @@ function FAQSection() {
   );
 }
 
+/* ═══════════════════════════════════════════════════════
+   CTA Section
+   ═══════════════════════════════════════════════════════ */
 function CTASection() {
   return (
     <section className="relative py-32 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-bg-dark via-accent/5 to-bg-dark" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[200px]" />
+      {/* Neon grid fragment */}
+      <div className="neon-grid" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0014] via-transparent to-[#0a0014]" />
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
         <h2
-          className="text-4xl sm:text-6xl font-black mb-6"
-          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          className="text-xl sm:text-3xl font-bold mb-6 text-glow-pink"
+          style={{ fontFamily: PIXEL_FONT }}
         >
           stop being a spectator.
           <br />
-          <span className="bg-gradient-to-r from-accent via-neon-pink to-accent-gold bg-clip-text text-transparent animate-gradient">
+          <span className="text-[#00fff0] text-glow-cyan">
             enter your villain arc.
           </span>
         </h2>
@@ -430,7 +613,7 @@ function CTASection() {
           href={TG_BOT_LINK}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-gradient-to-r from-accent to-neon-pink text-white font-bold text-xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-accent/40 animate-pulse-glow"
+          className="btn-arcade animate-arcade-pulse"
         >
           <TelegramIcon />
           become ungovernable
@@ -440,20 +623,21 @@ function CTASection() {
   );
 }
 
+/* ═══════════════════════════════════════════════════════
+   Footer
+   ═══════════════════════════════════════════════════════ */
 function Footer() {
   return (
-    <footer className="border-t border-border py-12">
+    <footer className="border-t border-[#39ff14]/20 py-12">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-neon-pink flex items-center justify-center text-sm font-bold">
-              H
-            </div>
+            <span className="text-xl">🐕</span>
             <span
-              className="font-bold"
-              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              className="text-xs text-glow-cyan"
+              style={{ fontFamily: PIXEL_FONT }}
             >
-              Homiez<span className="text-accent-light">.fun</span>
+              Homiez<span className="text-[#39ff14]">.fun</span>
             </span>
           </div>
 
@@ -462,11 +646,11 @@ function Footer() {
               href={TG_BOT_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-text-primary transition-colors"
+              className="hover:text-[#00fff0] transition-colors"
             >
               Telegram Bot
             </a>
-            <span className="text-border">|</span>
+            <span className="text-[#00fff0]/20">|</span>
             <span>&copy; 2025 Homiez.fun — not financial advice lmao</span>
           </div>
         </div>
@@ -475,6 +659,9 @@ function Footer() {
   );
 }
 
+/* ═══════════════════════════════════════════════════════
+   Telegram Icon
+   ═══════════════════════════════════════════════════════ */
 function TelegramIcon() {
   return (
     <svg
@@ -489,13 +676,19 @@ function TelegramIcon() {
   );
 }
 
+/* ═══════════════════════════════════════════════════════
+   Home (main)
+   ═══════════════════════════════════════════════════════ */
 export default function Home() {
   return (
-    <main className="relative">
+    <main className="relative scanlines">
+      <FloatingStickers />
       <Navbar />
       <HeroSection />
+      <LiveBetsTicker />
       <HowItWorks />
       <FeaturesSection />
+      <LeaderboardSection />
       <FAQSection />
       <CTASection />
       <Footer />
