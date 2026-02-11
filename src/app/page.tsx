@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 
 const TG_BOT_LINK = "https://t.me/homiezdotfun_bot";
-const API_BASE = "https://tugboat-production.up.railway.app/api";
+const API_BASE = "/api";
 
 /* ═══════════════════════════════════════════════════════
    Types
