@@ -307,16 +307,8 @@ function FAQSection() {
       a: "open the bot. make a bet. send it. that's literally it. if you need more steps than that idk what to tell you.",
     },
     {
-      q: "can i actually bet on anything tho",
-      a: "basically yeah. sports, crypto, 'i can eat 50 nuggets in an hour' — if both sides agree it's a valid bet. go crazy.",
-    },
-    {
       q: "what if my homie is a fraud",
       a: "the bot tracks everyone's record. duck a bet and your reputation is cooked forever. the wall of shame never forgets. accountability era.",
-    },
-    {
-      q: "you're taking my money too??",
-      a: "chill. tiny fee on settled bets. way less than any sportsbook. your bag stays between homiez.",
     },
   ];
 
